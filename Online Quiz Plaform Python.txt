@@ -1,0 +1,74 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class QuizApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Quiz App")
+        self.geometry("500x400")
+        
+        self.current_question = 0
+        self.score = 0
+
+        self.questions = (
+            "What is the chemical symbol for gold?: ",
+            "Which planet is known as the Red Planet?: ",
+            "What is the process by which plants make their own food?: ",
+            "What is the unit of measurement for electrical resistance?: ",
+            "Who developed the theory of relativity?: ",
+            "What is the largest organ in the human body?: ",
+            "What type of eclipse occurs when the moon passes between the sun and the earth?: ",
+            "Which gas makes up the majority of Earth's atmosphere?: ",
+            "What is the smallest bone in the human body?: ",
+            "What is the chemical symbol for water?: "
+        )
+
+        self.options = (
+            ("A.Au", "B.Ag", "C.Fe", "D.Pt"),
+            ("A.Venus", "B.Jupiter", "C.Mars", "D.Saturn"),
+            ("A.Respiration", "B.Photosynthesis", "C.Transpiration", "D.Germination"),
+            ("A.Watt", "B.Volt", "C.Ohm", "D.Ampere"),
+            ("A.Issac Newton", "B.Albert Einstien", "C.Galileo Galilei", "D.Nikola Tesla"),
+            ("A.Liver", "B.Brain", "C.Skin", "D.Heart"),
+            ("A.Solar eclipse", "B.Lunar eclipse", "C.Total eclipse ", "D.Annular eclipse "),
+            ("A.Oxygen", "B.Carbon dioxide", "C.Nitrogen", "D.Hydrogen"),
+            ("A.Femur", "B.Stapes", "C.Tibia", "D.Humerus"),
+            ("A.H2O", "B.CO2", "C.NACL", "D.CH4")
+        )
+
+        self.answers = ("A", "C", "B", "C", "B", "C", "A", "C", "B", "A")
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.question_label = tk.Label(self)
+        self.question_label.pack()
+
+        self.option_buttons = []
+        for option in self.options[self.current_question]:
+            btn = tk.Button(self, text=option, command=lambda option=option: self.check_answer(option[0]))
+            self.option_buttons.append(btn)
+            btn.pack()
+
+        self.update_question()
+
+    def update_question(self):
+        self.question_label.config(text=self.questions[self.current_question])
+        options = self.options[self.current_question]
+        for btn, option in zip(self.option_buttons, options):
+            btn.config(text=option)
+
+    def check_answer(self, choice):
+        if choice == self.answers[self.current_question]:
+            self.score += 1
+
+        self.current_question += 1
+        if self.current_question < len(self.questions):
+            self.update_question()
+        else:
+            messagebox.showinfo("Quiz Result", f"Your score is: {self.score} out of {len(self.questions)}")
+            self.destroy()
+
+if __name__ == "__main__":
+    app = QuizApp()
+    app.mainloop()
