@@ -1,74 +1,237 @@
 import tkinter as tk
 from tkinter import messagebox
 
-class QuizApp(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Quiz App")
-        self.geometry("500x400")
-        
+# Define quiz data
+questions = ("What is the chemical symbol for gold?: ",
+             "Which planet is known as the Red Planet?: ",
+             "What is the process by which plants make their own food?: ",
+             "What is the unit of measurement for electrical resistance?: ",
+             "Who developed the theory of relativity?: ",
+             "What is the largest organ in the human body?: ",
+             "What type of eclipse occurs when the moon passes between the sun and the earth?: ",
+             "Which gas makes up the majority of Earth's atmosphere?: ",
+             "What is the smallest bone in the human body?: ",
+             "What is the chemical symbol for water?: ",
+             "What is Newton's first law of motion?: ",
+             "What is the SI unit of force?: ",
+             "What is the speed of light in a vacuum?: ",
+             "What is the SI unit of energy?: ",
+             "What is the formula for gravitational force?: ",
+             "What does E=mc^2 represent?: ",
+             "What is the SI unit of power?: ",
+             "What is the principle of conservation of energy?: ",
+             "What is the SI unit of frequency?: ",
+             "What is the law of reflection?: ",
+             "Who was the first President of the United States?: ",
+             "When did World War II end?: ",
+             "Who wrote 'The Communist Manifesto'?: ",
+             "What year did the Titanic sink?: ",
+             "Who painted the Mona Lisa?: ",
+             "Who was the first man to step on the moon?: ",
+             "In what year did Christopher Columbus discover America?: ",
+             "Who was the first female Prime Minister of the United Kingdom?: ",
+             "Which civilization built the Machu Picchu?: ",
+             "Who was the first Emperor of Rome?: ")
+
+options = (("A. Au", "B. Ag", "C. Fe", "D. Pt"),
+           ("A. Venus", "B. Jupiter", "C. Mars", "D. Saturn"),
+           ("A. Respiration", "B. Photosynthesis", "C. Transpiration", "D. Germination"),
+           ("A. Watt", "B. Volt", "C. Ohm", "D. Ampere"),
+           ("A. Issac Newton", "B. Albert Einstein", "C. Galileo Galilei", "D. Nikola Tesla"),
+           ("A. Liver", "B. Brain", "C. Skin", "D. Heart"),
+           ("A. Solar eclipse", "B. Lunar eclipse", "C. Total eclipse ", "D. Annular eclipse "),
+           ("A. Oxygen", "B. Carbon dioxide", "C. Nitrogen", "D. Hydrogen"),
+           ("A. Femur", "B. Stapes", "C. Tibia", "D. Humerus"),
+           ("A. H2O", "B. CO2", "C. NACL", "D. CH4"),
+           ("A. An object in motion stays in motion", "B. Force equals mass times acceleration", "C. For every action, there is an equal and opposite reaction", "D. None of the above"),
+           ("A. Watt", "B. Newton", "C. Joule", "D. Pascal"),
+           ("A. 3 x 10^8 m/s", "B. 2.99 x 10^8 m/s", "C. 3.5 x 10^8 m/s", "D. 3.1 x 10^8 m/s"),
+           ("A. Newton", "B. Joule", "C. Watt", "D. Volt"),
+           ("A. F = G * (m1 * m2) / r^2", "B. F = (m1 * a) / m2", "C. F = m * g", "D. F = m * v"),
+           ("A. Energy-mass equivalence", "B. Gravity formula", "C. Speed of light", "D. Kinetic energy formula"),
+           ("A. Watt", "B. Joule", "C. Newton", "D. Pascal"),
+           ("A. Energy cannot be created or destroyed", "B. Energy can be created but not destroyed", "C. Energy can be destroyed but not created", "D. None of the above"),
+           ("A. Hertz", "B. Watt", "C. Joule", "D. Newton"),
+           ("A. Angle of incidence equals angle of reflection", "B. Angle of incidence is twice the angle of reflection", "C. Angle of incidence plus angle of reflection equals 180 degrees", "D. Angle of reflection is independent of the angle of incidence"),
+           ("A. George Washington", "B. Thomas Jefferson", "C. Abraham Lincoln", "D. John Adams"),
+           ("A. 1945", "B. 1939", "C. 1941", "D. 1943"),
+           ("A. Karl Marx", "B. Friedrich Engels", "C. Vladimir Lenin", "D. Leon Trotsky"),
+           ("A. 1912", "B. 1915", "C. 1917", "D. 1914"),
+           ("A. Leonardo da Vinci", "B. Michelangelo", "C. Vincent van Gogh", "D. Pablo Picasso"),
+           ("A. Neil Armstrong", "B. Buzz Aldrin", "C. Yuri Gagarin", "D. Michael Collins"),
+           ("A. 1492", "B. 1498", "C. 1501", "D. 1506"),
+           ("A. Margaret Thatcher", "B. Theresa May", "C. Indira Gandhi", "D. Angela Merkel"),
+           ("A. Inca", "B. Maya", "C. Aztec", "D. Olmec"),
+           ("A. Augustus", "B. Julius Caesar", "C. Constantine the Great", "D. Nero"))
+
+answers = ("A", "C", "B", "C", "B", "C", "A", "C", "B", "A",
+           "A", "B", "A", "C", "A", "A", "A", "A", "A", "A",
+           "A", "A", "A", "A", "A", "A", "A", "A", "A", "A")
+
+# Split questions into different sections
+chemistry_questions = questions[:10]
+physics_questions = questions[10:20]
+history_questions = questions[20:]
+
+chemistry_answers = answers[:10]
+physics_answers = answers[10:20]
+history_answers = answers[20:]
+
+class QuizApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Quiz App")
+        self.master.geometry("500x400")
+
         self.current_question = 0
         self.score = 0
+        self.chemistry_score = 0
+        self.physics_score = 0
+        self.history_score = 0
 
-        self.questions = (
-            "What is the chemical symbol for gold?: ",
-            "Which planet is known as the Red Planet?: ",
-            "What is the process by which plants make their own food?: ",
-            "What is the unit of measurement for electrical resistance?: ",
-            "Who developed the theory of relativity?: ",
-            "What is the largest organ in the human body?: ",
-            "What type of eclipse occurs when the moon passes between the sun and the earth?: ",
-            "Which gas makes up the majority of Earth's atmosphere?: ",
-            "What is the smallest bone in the human body?: ",
-            "What is the chemical symbol for water?: "
-        )
-
-        self.options = (
-            ("A.Au", "B.Ag", "C.Fe", "D.Pt"),
-            ("A.Venus", "B.Jupiter", "C.Mars", "D.Saturn"),
-            ("A.Respiration", "B.Photosynthesis", "C.Transpiration", "D.Germination"),
-            ("A.Watt", "B.Volt", "C.Ohm", "D.Ampere"),
-            ("A.Issac Newton", "B.Albert Einstien", "C.Galileo Galilei", "D.Nikola Tesla"),
-            ("A.Liver", "B.Brain", "C.Skin", "D.Heart"),
-            ("A.Solar eclipse", "B.Lunar eclipse", "C.Total eclipse ", "D.Annular eclipse "),
-            ("A.Oxygen", "B.Carbon dioxide", "C.Nitrogen", "D.Hydrogen"),
-            ("A.Femur", "B.Stapes", "C.Tibia", "D.Humerus"),
-            ("A.H2O", "B.CO2", "C.NACL", "D.CH4")
-        )
-
-        self.answers = ("A", "C", "B", "C", "B", "C", "A", "C", "B", "A")
-
-        self.create_widgets()
-
-    def create_widgets(self):
-        self.question_label = tk.Label(self)
+        self.question_label = tk.Label(self.master, text="")
         self.question_label.pack()
 
+        self.option_var = tk.StringVar()
+        self.option_var.set(None)
+
+        self.options_frame = tk.Frame(self.master)
+        self.options_frame.pack()
+
         self.option_buttons = []
-        for option in self.options[self.current_question]:
-            btn = tk.Button(self, text=option, command=lambda option=option: self.check_answer(option[0]))
-            self.option_buttons.append(btn)
-            btn.pack()
+        for i in range(4):
+            button = tk.Radiobutton(self.options_frame, text="", variable=self.option_var, value="", command=self.check_answer)
+            button.pack(anchor=tk.W)
+            self.option_buttons.append(button)
+
+        self.next_button = tk.Button(self.master, text="Next", command=self.next_question)
+        self.next_button.pack()
+
+        self.timer_label = tk.Label(self.master, text="Time left: 05:00")
+        self.timer_label.pack()
+
+        self.remaining_time = 300  # 5 minutes in seconds
+        self.update_timer()
 
         self.update_question()
 
+        # Menu bar
+        self.menu_bar = tk.Menu(self.master)
+        self.master.config(menu=self.menu_bar)
+
+        # Quiz menu
+        self.quiz_menu = tk.Menu(self.menu_bar, tearoff=False)
+        self.menu_bar.add_cascade(label="Quiz", menu=self.quiz_menu)
+        self.quiz_menu.add_command(label="Start Quiz", command=self.start_quiz)
+        self.quiz_menu.add_command(label="Add Custom Question", command=self.add_custom_question_window)
+
+    def start_quiz(self):
+        # Implement your start quiz logic here
+        pass
+
+    def add_custom_question_window(self):
+        self.custom_question_window = tk.Toplevel(self.master)
+        self.custom_question_window.title("Add Custom Question")
+
+        self.section_var = tk.StringVar()
+        self.section_var.set("chemistry")  # Default section
+
+        tk.Label(self.custom_question_window, text="Section:").pack()
+        tk.Radiobutton(self.custom_question_window, text="Chemistry", variable=self.section_var, value="chemistry").pack(anchor=tk.W)
+        tk.Radiobutton(self.custom_question_window, text="Physics", variable=self.section_var, value="physics").pack(anchor=tk.W)
+        tk.Radiobutton(self.custom_question_window, text="History", variable=self.section_var, value="history").pack(anchor=tk.W)
+
+        self.question_entry = tk.Entry(self.custom_question_window, width=50)
+        self.question_entry.pack()
+        tk.Label(self.custom_question_window, text="Question:").pack()
+
+        self.options_entry = []
+        for i in range(4):
+            option_entry = tk.Entry(self.custom_question_window, width=50)
+            option_entry.pack()
+            self.options_entry.append(option_entry)
+
+        tk.Label(self.custom_question_window, text="Options:").pack()
+
+        self.answer_var = tk.StringVar()
+        self.answer_var.set("A")  # Default answer
+
+        tk.Label(self.custom_question_window, text="Correct Answer:").pack()
+        tk.Radiobutton(self.custom_question_window, text="A", variable=self.answer_var, value="A").pack(anchor=tk.W)
+        tk.Radiobutton(self.custom_question_window, text="B", variable=self.answer_var, value="B").pack(anchor=tk.W)
+        tk.Radiobutton(self.custom_question_window, text="C", variable=self.answer_var, value="C").pack(anchor=tk.W)
+        tk.Radiobutton(self.custom_question_window, text="D", variable=self.answer_var, value="D").pack(anchor=tk.W)
+
+        add_button = tk.Button(self.custom_question_window, text="Add Question", command=self.add_custom_question)
+        add_button.pack()
+
+    def add_custom_question(self):
+        section = self.section_var.get()
+        question = self.question_entry.get()
+        options = [entry.get() for entry in self.options_entry]
+        answer = self.answer_var.get()
+
+        if not question or not all(options):
+            messagebox.showwarning("Incomplete Data", "Please fill in all fields.")
+            return
+
+        questions.append(question)
+        options.append(options)
+        answers.append(answer)
+        if section == 'chemistry':
+            chemistry_questions.append(question)
+            chemistry_answers.append(answer)
+        elif section == 'physics':
+            physics_questions.append(question)
+            physics_answers.append(answer)
+        elif section == 'history':
+            history_questions.append(question)
+            history_answers.append(answer)
+
+        messagebox.showinfo("Question Added", "Custom question added successfully.")
+
     def update_question(self):
-        self.question_label.config(text=self.questions[self.current_question])
-        options = self.options[self.current_question]
-        for btn, option in zip(self.option_buttons, options):
-            btn.config(text=option)
-
-    def check_answer(self, choice):
-        if choice == self.answers[self.current_question]:
-            self.score += 1
-
-        self.current_question += 1
-        if self.current_question < len(self.questions):
-            self.update_question()
+        if self.current_question < len(questions):
+            self.question_label.config(text=questions[self.current_question])
+            for i, option in enumerate(options[self.current_question]):
+                self.option_buttons[i].config(text=option, value=chr(ord('A') + i))
         else:
-            messagebox.showinfo("Quiz Result", f"Your score is: {self.score} out of {len(self.questions)}")
-            self.destroy()
+            messagebox.showinfo("Quiz Finished", f"Your overall score: {self.score}/30\n"
+                                                  f"Chemistry score: {self.chemistry_score}/10\n"
+                                                  f"Physics score: {self.physics_score}/10\n"
+                                                  f"History score: {self.history_score}/10\n\n"
+                                                  f"Overall percentage: {self.score/30 * 100:.2f}%")
+
+    def check_answer(self):
+        correct_answer = answers[self.current_question]
+        selected_answer = self.option_var.get()
+        if selected_answer == correct_answer:
+            self.score += 1
+            if self.current_question < 10:
+                self.chemistry_score += 1
+            elif self.current_question < 20:
+                self.physics_score += 1
+            else:
+                self.history_score += 1
+
+    def next_question(self):
+        self.current_question += 1
+        self.update_question()
+
+    def update_timer(self):
+        minutes = self.remaining_time // 60
+        seconds = self.remaining_time % 60
+        self.timer_label.config(text=f"Time left: {minutes:02}:{seconds:02}")
+        if self.remaining_time > 0:
+            self.remaining_time -= 1
+            self.master.after(1000, self.update_timer)
+        else:
+            messagebox.showinfo("Time's Up!", "You have run out of time!")
+
+def main():
+    root = tk.Tk()
+    app = QuizApp(root)
+    root.mainloop()
 
 if __name__ == "__main__":
-    app = QuizApp()
-    app.mainloop()
+    main()
